@@ -5,3 +5,5 @@
  - installed virtualenv
  - added requirements.txt 
    - installed customtkinter
+
+[//]: # (TODO: add more logs from today)
