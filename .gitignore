@@ -1,3 +1,4 @@
-.idea/*
-bible/
-bible/*
+/.idea/*
+/bible/
+/bible/*
+/bible_stats.json
