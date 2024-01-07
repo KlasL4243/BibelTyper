@@ -15,27 +15,19 @@ def parse_bible():
     If the bible folder is empty, bible.txt will be parsed into the bible folder.
     """
 
-    if not _bible_folder_already_exists():
+    # if bible.txt doesn't exist, create it
+    if not paths["bible"]["folder"].exists():
         print("Creating bible folder...")
-        _create_bible_folder()
-    if not _bible_already_parsed():
+        paths["bible"]["folder"].mkdir()
+
+    # if bible folder is empty, parse bible.txt
+    if not any(paths["bible"]["folder"].iterdir()):
         print("Parsing bible.txt...")
         _parse_bible_file()
+
     else:
         print("Bible already parsed.")
 
-
-def _bible_folder_already_exists():
-    """Returns True if bible folder already exists."""
-    return paths["bible"]["folder"].exists()
-
-def _create_bible_folder():
-    """Creates bible folder"""
-    paths["bible"]["folder"].mkdir()
-
-def _bible_already_parsed():
-    """Returns True if bible folder contains any files."""
-    return any(paths["bible"]["folder"].iterdir())
 
 def _parse_bible_file():
     """Parses bible.txt into a folder of csv files, one for each book of the bible."""
