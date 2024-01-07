@@ -1,11 +1,13 @@
 from pathlib import Path
 from csv import writer, QUOTE_STRINGS
+from json import dump
 
 # paths to files and folders
 paths = {
     "bible": {
         "txt": Path("bible.txt"),
-        "folder": Path("bible/")
+        "folder": Path("bible/"),
+        "stats": Path("bible_stats.json")
     }
 }
 
@@ -49,6 +51,16 @@ def _parse_bible_file():
 
         # adds the verse to the book
         books[book].append((chapter, verse, text))
+
+    stats = {
+        "books": list(books.keys()),
+        "book_count": len(books),
+        "chapter_count": sum(rows[-1][0] for rows in books.values()),
+        "verse_count": len(file_bible)
+    }
+
+    with open(file=paths["bible"]["stats"], mode="w+", encoding="utf-8") as file:
+        dump(stats, file, indent=4)
 
     # write each book to a csv file
     for book, rows in books.items():
