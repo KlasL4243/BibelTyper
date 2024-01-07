@@ -1,6 +1,8 @@
 from pathlib import Path
-from csv import writer, QUOTE_STRINGS
-from json import dump
+from csv import writer, reader, QUOTE_STRINGS
+from json import dump, load
+
+from book import Book
 
 # paths to files and folders
 paths = {
@@ -10,6 +12,22 @@ paths = {
         "stats": Path("bible_stats.json")
     }
 }
+
+def load_book(name: str) -> Book | None:
+    """Loads a book of the bible into a list of tuples."""
+
+    with open(file=paths["bible"]["stats"], mode="r", encoding="utf-8") as file:
+        stats = load(file)
+
+    if name not in stats["books"]:
+        print(f"{name} is not a book of the bible.")
+        return None
+
+    with open(file=f"bible/{name}.csv", mode="r", encoding="utf-8", newline="") as file:
+        csv_reader = reader(file, quoting=QUOTE_STRINGS)
+        next(csv_reader)  # skip the header
+        return Book(list(csv_reader))
+
 
 def parse_bible():
     """
@@ -43,7 +61,6 @@ def _parse_bible_file():
     for line in file_bible:
         book, chapter_and_verse, text = line.split(sep=" ", maxsplit=2)
         chapter, verse = chapter_and_verse.split(":")
-        chapter, verse = int(chapter), int(verse)
 
         # add book to books if it doesn't exist
         if book not in books:
@@ -55,7 +72,7 @@ def _parse_bible_file():
     stats = {
         "books": list(books.keys()),
         "book_count": len(books),
-        "chapter_count": sum(rows[-1][0] for rows in books.values()),
+        "chapter_count": sum(int(rows[-1][0]) for rows in books.values()),
         "verse_count": len(file_bible)
     }
 
