@@ -10,3 +10,13 @@ class Book(list):
 
         for row in rows:
             self[int(row[0])-1].append(row[2])
+
+    def next_verse(self, chapter: int, verse: int):
+        if verse < len(self[chapter-1]):
+            return chapter, verse+1
+
+        elif chapter < self.chapter_count:
+            return chapter+1, 1
+
+        else:
+            return None
